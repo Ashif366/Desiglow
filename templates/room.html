@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+
+{% block title %}Chat Room{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div id="chat-log" class="chat-log">
+        {% for message in messages %}
+        <div class="message {% if message.sender == request.user %}outgoing{% else %}incoming{% endif %}">
+            <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+        </div>
+        {% endfor %}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="chat-input">
+            <input id="chat-message-input" name="message" type="text" size="100" placeholder="Type your message...">
+            <button type="submit" id="chat-message-submit">Send</button>
+        </div>
+    </form>
+</div>
+<style>
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+    }
+    .chat-log {
+        flex: 1;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+    .chat-input input[type="text"] {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .chat-input button {
+        margin-left: 10px;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .message {
+        margin-bottom: 10px;
+    }
+    .message.outgoing {
+        text-align: right;
+    }
+    .message.incoming {
+        text-align: left;
+    }
+</style>
+{% endblock %}

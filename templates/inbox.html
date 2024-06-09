@@ -1,0 +1,161 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load chat_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f0f2f5;
+    }
+
+    .inbox-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .inbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #f0f2f5;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .inbox-header h1 {
+        font-size: 1.5em;
+        color: #333;
+        margin: 0;
+    }
+
+    .chat-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .chat-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 10px;
+        border-bottom: 1px solid #ddd;
+        transition: background-color 0.2s;
+    }
+
+    .chat-list li:hover {
+        background-color: #f9f9f9;
+    }
+
+    .chat-list a {
+        text-decoration: none;
+        color: #333;
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-name {
+        font-weight: bold;
+        font-size: 1em;
+    }
+
+    .chat-last-message {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .chat-time {
+        font-size: 0.8em;
+        color: #999;
+    }
+
+    .unseen-count {
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 5px 10px;
+        font-size: 0.9em;
+        margin-left: 10px;
+    }
+
+    .chat-unseen {
+        background-color: rgb(199, 199, 199);
+    }
+
+    .chat-seen {
+        background-color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+        .inbox-container {
+            padding: 10px;
+        }
+
+        .inbox-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .chat-list li {
+            padding: 10px;
+        }
+
+        .unseen-count {
+            padding: 3px 8px;
+            font-size: 0.8em;
+        }
+    }
+</style>
+
+<div class="inbox-container">
+    <div class="inbox-header">
+        <h1>Inbox</h1>
+    </div>
+    <ul class="chat-list">
+        {% for chat in chats %}
+        {% with last_message=chat.messages.last %}
+        <li class="{% if last_message and last_message.receiver == profile and not last_message.seen %}chat-unseen{% else %}chat-seen{% endif %}">
+            <a href="{% url 'chat_view' chat.id %}">
+                <div class="chat-info">
+                    <span class="chat-name">
+                        {% if chat.user1 == profile %}
+                            {{ chat.user2.first_name }}
+                        {% else %}
+                            {{ chat.user1.first_name }}
+                        {% endif %}
+                    </span>
+                    <span class="chat-last-message">
+                        {% if last_message %}
+                            {{ last_message.content|truncatechars:30 }}
+                        {% else %}
+                            No messages yet.
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="chat-time">
+                    {% if last_message %}
+                        {{ last_message.timestamp }}
+                    {% endif %}
+                </div>
+                {% unseen_messages_count chat profile as unseen_count %}
+                {% if unseen_count > 0 %}
+                <span class="unseen-count">{{ unseen_count }}</span>
+                {% endif %}
+            </a>
+        </li>
+        {% endwith %}
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

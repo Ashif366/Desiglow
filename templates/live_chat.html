@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="profile-actions">
+        <a href="{% url 'start_chat' profile.id %}">Message</a>
+    </div>
+</div>
+
+{% endblock content %}

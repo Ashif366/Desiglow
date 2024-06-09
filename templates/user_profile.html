@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #555;
+        margin-right: 20px;
+    }
+
+    .profile-details {
+        flex-grow: 1;
+    }
+
+    .profile-details h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .profile-details p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #666;
+    }
+
+    .msg-send-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.2s;
+    }
+
+    .msg-send-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ user.username|slice:":1" }}
+        </div>
+        <div class="profile-details">
+            <h1>{{ user.username }}</h1>
+            <p>First Name: {{ user.first_name }}</p>
+            <p>Last Name: {{ user.last_name }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
+    </div>
+    <a href="{% url 'start_chat' user.id %}" class="msg-send-btn">Message</a>
+</div>
+{% endblock content %}
